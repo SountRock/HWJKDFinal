@@ -1,8 +1,12 @@
 package org.example;
 
 import java.io.PrintStream;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.math3.stat.StatUtils;
 
 /**
  * Класс для записи статистики
@@ -35,13 +39,16 @@ public class Statistic {
      * Печатает статистику
      */
     public void printStatistic(){
-        double allSumProbability = 0;
+        Format dFormat = new DecimalFormat("#.###");
+
+        double[] allProbability = new double[statistic.size()];
+        int index = 0;
         for (Map.Entry stat : statistic.entrySet()) {
-            allSumProbability += (double) stat.getValue();
-            writerStatistic.println("Record№" + stat.getKey() + ": Probability = " + stat.getValue());
+            allProbability[index++] = (double) stat.getValue();
+            writerStatistic.println("Record№" + stat.getKey() + ": Probability = " + dFormat.format(stat.getValue()));
         }
 
-        double MiddleProbability = allSumProbability / statistic.size();
-        writerStatistic.println("Middle Probability: " +  MiddleProbability);
+        double MiddleProbability = StatUtils.mean(allProbability);
+        writerStatistic.println("Middle Probability: " +  dFormat.format(MiddleProbability));
     }
 }
